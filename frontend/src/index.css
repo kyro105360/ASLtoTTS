@@ -67,12 +67,12 @@ body {
   right: 20px;
   cursor: pointer;
   padding: 6px;
-}
+} 
 
 .container {
   max-width: 1600px;
   margin: 0 auto;
   padding: 10px 20px;
   display: flex;
-  justify-content: start;
+  justify-content: flex-start;
 }
