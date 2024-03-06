@@ -6,7 +6,7 @@ const WebcamCapture = () => {
     const [detectedText, setDetectedText] = useState("Detected text will appear here");
     const [isInitialMessage, setIsInitialMessage] = useState(true); // Add this line
 
-
+//dummy comment
     useEffect(() => {
         // Initialize WebSocket connection
         webSocket.current = new WebSocket("ws://localhost:8765");
