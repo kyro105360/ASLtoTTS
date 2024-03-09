@@ -20,9 +20,10 @@ const WebcamCapture = () => {
                 setDetectedText(prevText => {
                     let word = ""
                     // Check if `prevText` is still the initial message
-                    if (prevText === "Detected text will appear here") {
+                    if (prevText === 'Detected text will appear here') {
+                        setIsInitialMessage(false);
                         // If so, replace it with the received character
-                        if (!(receivedCharacter === "\b" ||  receivedCharacter === " "))
+                        if (receivedCharacter !== "\b")
                             word = receivedCharacter;
                     } else {
                         if (receivedCharacter === "\b")
@@ -31,10 +32,8 @@ const WebcamCapture = () => {
                             word= `${prevText}${receivedCharacter}`;
                     }
                     if (word === "")
-                        return "Detected text will appear here"
-
+                        return 'Detected text will appear here'                        
                     return word;
-                    
                 });
             };
         }
@@ -65,7 +64,7 @@ const WebcamCapture = () => {
 
         const intervalId = setInterval(() => {
             captureAndSendFrame();
-        }, 2000); // Adjust the interval as needed
+        }, 3000); // Adjust the interval as needed
 
         return () => clearInterval(intervalId);
     }, [webSocket.current]); // Re-run the effect if the WebSocket connection changes
@@ -75,11 +74,14 @@ const WebcamCapture = () => {
             const canvas = document.createElement("canvas");
             canvas.width = videoRef.current.videoWidth;
             canvas.height = videoRef.current.videoHeight;
+            console.log(canvas.width);
+            console.log(canvas.height);
             const context = canvas.getContext("2d");
             context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+            if (canvas.width >= 640 && canvas.height >= 480){
             canvas.toBlob((blob) => {
                 webSocket.current.send(blob); // Send the frame as a Blob over the WebSocket
-            }, "image/jpeg");
+            }, "image/jpeg");}
         }
     };
 
@@ -113,7 +115,7 @@ const WebcamCapture = () => {
                 <textarea
                     value={detectedText}
                     onChange={handleTextChange}
-                    onFocus={() => isInitialMessage && setDetectedText("")} // Clear text when the textarea is focused if it"s the initial message
+                    onFocus={() => isInitialMessage && setDetectedText('')} // Clear text when the textarea is focused if it's the initial message
                 />
                 <span className="material-symbols-outlined" onClick={handleSpeakerIconClick}>
                     volume_up
