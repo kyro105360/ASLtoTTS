@@ -23,14 +23,13 @@ const WebcamCapture = () => {
                     if (prevText === 'Detected text will appear here') {
                         setIsInitialMessage(false);
                         // If so, replace it with the received character
-                        if (receivedCharacter !== "\b")
+                        if (receivedCharacter !== "\b" && receivedCharacter !== " ")
                             word = receivedCharacter;
-                    } else {
-                        if (receivedCharacter === "\b")
-                            word = prevText.substring(0, prevText.length-1);
-                        else
-                            word= `${prevText}${receivedCharacter}`;
-                    }
+                    } else if (receivedCharacter === "\b")
+                        word = prevText.substring(0, prevText.length-1);
+                    else
+                        word= `${prevText}${receivedCharacter}`;
+                    
                     if (word === "")
                         return 'Detected text will appear here'                        
                     return word;
@@ -113,6 +112,7 @@ const WebcamCapture = () => {
             </div>
             <div className="OutputText">
                 <textarea
+                    autoComplete="true"
                     value={detectedText}
                     onChange={handleTextChange}
                     onFocus={() => isInitialMessage && setDetectedText('')} // Clear text when the textarea is focused if it's the initial message
