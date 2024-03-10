@@ -6,14 +6,14 @@ const WebcamCapture = () => {
     const [detectedText, setDetectedText] = useState("Detected text will appear here");
     const [isInitialMessage, setIsInitialMessage] = useState(true); // Add this line
 
-//dummy comment
+
     useEffect(() => {
         // Initialize WebSocket connection
-        webSocket.current = new WebSocket("ws://localhost:8765");
+        webSocket.current = new WebSocket("ws://localhost:4000");
         webSocket.current.onopen = () => console.log("WebSocket Connected");
         webSocket.current.onerror = (error) => console.log("WebSocket Error: ", error);
 
-        // Handle messages received from the server
+        // Change text in textbox depending on received character and current state
         webSocket.current.onmessage = (event) => {
             const receivedCharacter = event.data; // `event.data` contains the character sent from the server
             if (receivedCharacter !== "") {
@@ -39,7 +39,7 @@ const WebcamCapture = () => {
 
         webSocket.current.onclose = () => console.log("WebSocket Disconnected");
 
-        // Get access to the webcam
+        // Access the webcam
         if (navigator.mediaDevices.getUserMedia) {
             navigator.mediaDevices.getUserMedia({ video: true })
                 .then((stream) => {
@@ -63,10 +63,10 @@ const WebcamCapture = () => {
 
         const intervalId = setInterval(() => {
             captureAndSendFrame();
-        }, 3000); // Adjust the interval as needed
+        }, 1000); // Adjust the interval as needed
 
         return () => clearInterval(intervalId);
-    }, [webSocket.current]); // Re-run the effect if the WebSocket connection changes
+    }, ); 
 
     const captureAndSendFrame = () => {
         if (videoRef.current && webSocket.current.readyState === WebSocket.OPEN) {
@@ -79,20 +79,17 @@ const WebcamCapture = () => {
             context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
             if (canvas.width >= 640 && canvas.height >= 480){
             canvas.toBlob((blob) => {
-                webSocket.current.send(blob); // Send the frame as a Blob over the WebSocket
+                webSocket.current.send(blob); // Send the frame as a Blob through WebSocket
             }, "image/jpeg");}
         }
     };
 
-    // Function to speak the detected text
-    const speak = (text) => {
-        const speech = new SpeechSynthesisUtterance(text);
-        window.speechSynthesis.speak(speech);
-    };
+   
 
     // Handler for clicking the speaker icon
     const handleSpeakerIconClick = () => {
-        speak(detectedText);
+        const speech = new SpeechSynthesisUtterance(detectedText);
+        window.speechSynthesis.speak(speech);
     };
 
     const handleTextChange = (event) => {

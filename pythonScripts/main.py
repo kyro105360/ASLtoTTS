@@ -17,8 +17,8 @@ async def echo(websocket, path):
         await websocket.send(char)
 
 async def main():
-    async with websockets.serve(echo, "localhost", 8765):
-        print("WebSocket server started on ws://localhost:8765")
+    async with websockets.serve(echo, "localhost", 4000):
+        print("WebSocket server started on ws://localhost:4000")
         await asyncio.Future()  # run forever
 
 
