@@ -9,8 +9,6 @@ def runCamera(frame):
 
 
     hands = mediapipe.solutions.hands
-    drawing = mediapipe.solutions.drawing_utils
-    drawingStyles = mediapipe.solutions.drawing_styles
 
     mpHands = hands.Hands(static_image_mode=True, min_detection_confidence=0.3)
 
@@ -21,19 +19,11 @@ def runCamera(frame):
     x_ = []
     y_ = []
 
-    H, W, _ = frame.shape
 
     frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
     results = mpHands.process(frame_rgb)
     if results.multi_hand_landmarks:
-        # for handLandmarks in results.multi_hand_landmarks:
-        #     drawing.draw_landmarks(
-        #         frame,  # image to draw
-        #         handLandmarks,  # model output
-        #         hands.HAND_CONNECTIONS,  # hand connections
-        #         drawingStyles.get_default_hand_landmarks_style(),
-        #         drawingStyles.get_default_hand_connections_style())
 
         for handLandmarks in results.multi_hand_landmarks:
             for i in range(len(handLandmarks.landmark)):
@@ -49,11 +39,6 @@ def runCamera(frame):
                 landmarkCoords.append(x - min(x_))
                 landmarkCoords.append(y - min(y_))
 
-        x1 = int(min(x_) * W) - 10
-        y1 = int(min(y_) * H) - 10
-
-        x2 = int(max(x_) * W) - 10
-        y2 = int(max(y_) * H) - 10
         if len(landmarkCoords) == 42:
             landmarkCoords = np.expand_dims(landmarkCoords, axis=0)
             prediction = model([np.asarray(landmarkCoords)])
@@ -61,13 +46,4 @@ def runCamera(frame):
             predictedCharacter = labels_dict[predictedIndex]
             return predictedCharacter
     return ""
-    #     cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 0, 0), 4)
-    #     cv2.putText(frame, predictedCharacter, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 1.3, (0, 0, 0), 3,
-    #                 cv2.LINE_AA)
 
-    # cv2.imshow('frame', frame)
-    # cv2.waitKey(1)
-
-
-    cap.release()
-    cv2.destroyAllWindows()
