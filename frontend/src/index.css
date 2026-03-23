@@ -1,78 +1,187 @@
+:root {
+  --bg: #f6f2e8;
+  --bg-accent: #ead9b8;
+  --ink: #1f1f1f;
+  --muted: #615a50;
+  --panel: rgba(255, 252, 245, 0.88);
+  --border: rgba(63, 57, 49, 0.18);
+  --shadow: 0 20px 60px rgba(86, 66, 34, 0.15);
+  --connected: #3b7a57;
+  --requesting: #b77b2c;
+  --error: #a33a2d;
+}
+
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.65), transparent 34%),
+    linear-gradient(135deg, var(--bg), var(--bg-accent));
+  min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-.WebcamOutputContainer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 20px;
+header {
+  padding: 1.5rem 0 0;
 }
-
-.WebcamFeed video {
-  width: 800px; /* Adjust to your needs */
-  height: 600px; /* Adjust to match your video feed */
-  display: flex;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  border-top-left-radius: 8px;
-  border-bottom-left-radius: 8px;
-}
-
-.OutputText {
-  position: relative;
-  width: 800px;
-  height: 600px;
-  background-color: #ececec;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  border-top-right-radius: 8px;
-  border-bottom-right-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  box-sizing: border-box;
-}
-
-.OutputText textarea {
-  width: calc(100% - 40px); /* Full width minus padding */
-  height: calc(100% - 40px); /* Full height minus padding */
-  border: none;
-  outline: none;
-  resize: none;
-  font-family: inherit;
-  font-size: 20px;
-  background-color: transparent;
-  overflow-y: auto; /* Allows scrolling */
-  box-sizing: border-box; /* Padding does not affect the width and height */
-}
-
-/* Hide the scrollbar for textarea */
-.OutputText textarea::-webkit-scrollbar {
-  display: none;
-}
-
-.OutputText textarea {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-}
-
-.OutputText span {
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
-  cursor: pointer;
-  padding: 6px;
-} 
 
 .container {
-  max-width: 1600px;
+  width: min(1120px, calc(100% - 2rem));
   margin: 0 auto;
-  padding: 10px 20px;
+}
+
+.container h1 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+main {
+  width: min(1120px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 1.5rem 0 3rem;
+}
+
+.captureShell {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.statusRow {
   display: flex;
-  justify-content: flex-start;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.statusPill {
+  margin: 0;
+  padding: 0.7rem 1rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.68);
+  border: 1px solid var(--border);
+  text-transform: capitalize;
+  font-size: 0.95rem;
+}
+
+.statusPill--connected,
+.statusPill--ready {
+  color: var(--connected);
+}
+
+.statusPill--connecting,
+.statusPill--requesting,
+.statusPill--disconnected,
+.statusPill--unsupported {
+  color: var(--requesting);
+}
+
+.statusPill--error {
+  color: var(--error);
+}
+
+.workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: 1.25rem;
+}
+
+.panel {
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  background: var(--panel);
+  box-shadow: var(--shadow);
+  padding: 1.25rem;
+  backdrop-filter: blur(18px);
+}
+
+.panelHeader {
+  display: grid;
+  gap: 0.35rem;
+  margin-bottom: 1rem;
+}
+
+.panelHeader h2 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.eyebrow {
+  margin: 0;
+  color: var(--muted);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+}
+
+.panelNote {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.panel--video video {
+  width: 100%;
+  min-height: 320px;
+  border-radius: 20px;
+  background: #101010;
+  object-fit: cover;
+}
+
+.panel--transcript textarea {
+  width: 100%;
+  min-height: 320px;
+  resize: none;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.8);
+  color: var(--ink);
+  font: inherit;
+  line-height: 1.5;
+}
+
+.actionRow {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.actionRow button {
+  border: none;
+  border-radius: 999px;
+  padding: 0.85rem 1.2rem;
+  font: inherit;
+  cursor: pointer;
+  color: #fff7eb;
+  background: #1f1f1f;
+  transition: transform 120ms ease, opacity 120ms ease;
+}
+
+.actionRow button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.actionRow button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.actionRow .buttonSecondary {
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid var(--border);
+}
+
+@media (max-width: 900px) {
+  .workspace {
+    grid-template-columns: 1fr;
+  }
 }
